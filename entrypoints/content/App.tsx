@@ -9,6 +9,7 @@ import ExtMessage, {MessageType} from "@/entrypoints/types.ts";
 import Header from "@/entrypoints/content/header.tsx";
 import {useTranslation} from "react-i18next";
 import {useTheme} from "@/components/theme-provider.tsx";
+import { createRoot } from 'react-dom/client';
 
 export default () => {
     const [showContent, setShowContent] = useState(true);
@@ -29,8 +30,30 @@ export default () => {
         }
     }
 
+    const containerBox = () => {
+        const container = document.createElement('div');
+        const root = createRoot(container);
+        root.render(
+          <div className={`h-[300px] w-full bg-slate-50 dark:bg-slate-900 text-black dark:text-white`}>
+            <p className="text-red-500 text-center text-2xl">container box</p>
+          </div>
+        );
+        return container;
+      }
+
+    function injectTailwind() {
+        const nameElement = document.querySelector(".name");
+        if (nameElement) {
+            const textGroupParent = nameElement.parentElement;
+            if (textGroupParent) {
+                textGroupParent.insertBefore(containerBox(), textGroupParent.firstChild);
+            }
+        }
+    }
+
     function domLoaded() {
         console.log("dom loaded")
+        injectTailwind();
     }
 
     useEffect(() => {
