@@ -11,7 +11,7 @@ import {useTranslation} from "react-i18next";
 import {useTheme} from "@/components/theme-provider.tsx";
 import { createRoot } from 'react-dom/client';
 
-export default () => {
+export default (ctx: any) => {
     const [showContent, setShowContent] = useState(true);
     const [showButton, setShowButton] = useState(false)
     const [showCard, setShowCard] = useState(false)
@@ -41,15 +41,21 @@ export default () => {
         return container;
       }
 
-    function injectTailwind() {
-        const nameElement = document.querySelector(".name");
-        if (nameElement) {
-            const textGroupParent = nameElement.parentElement;
-            if (textGroupParent) {
-                textGroupParent.insertBefore(containerBox(), textGroupParent.firstChild);
-            }
-        }
-    }
+	async function injectTailwind() {
+		const nameElement = document.querySelector(".name");
+		if (!nameElement) return;
+
+		const secondUi = await createShadowRootUi(ctx, {
+			name: "container-box",
+			anchor: nameElement,
+			append: "first",
+			onMount: (container) => {
+				container.append(containerBox());
+			},
+			position: "inline",
+		});
+		secondUi.mount();
+	}
 
     function domLoaded() {
         console.log("dom loaded")

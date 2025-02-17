@@ -18,7 +18,7 @@ export default defineContentScript({
                 const root = ReactDOM.createRoot(container);
                 root.render(
                     <ThemeProvider>
-                        <App/>
+                        <App ctx={ctx} />
                     </ThemeProvider>
                 );
                 return root;
